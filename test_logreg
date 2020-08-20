@@ -1,0 +1,54 @@
+# install packages
+install.packages('MASS')
+install.packages('visreg')
+install.packages('brglm')
+install.packages('car')
+install.packages('mgcv')
+install.packages('sas7bdat')
+install.packages('dplyr')
+
+# load packages
+library(MASS)
+library(visreg)
+library(brglm)
+library(car)
+library(mgcv)
+library(sas7bdat)
+library(dplyr)
+
+# set working directory
+setwd('C:/Users/chely/Documents/R/Homework1_LR')
+
+# Read in SAS data
+data <- read.sas7bdat("insurance_t.sas7bdat")
+
+# Copy of data with variables of interest
+data_copy <- data %>%
+  select(INS, IRA, IRABAL, LOC, LOCBAL, LORES, MM)
+
+# Create logistic regression model of copy data
+logit.model <- glm(factor(INS) ~ IRABAL + LOCBAL + LORES + factor(IRA) + factor(LOC) + factor(MM), 
+                   data=data_copy, family = binomial(link = 'logit'))
+
+# See summary results of model
+summary(logit.model)
+
+# Overall test for categorical variable: MM
+logit.model.noMM <- glm(factor(INS) ~ IRABAL + LOCBAL + LORES + factor(IRA) + factor(LOC), 
+                     data=data_copy, family = binomial(link = 'logit'))
+
+anova(logit.model, logit.model.noMM, test = 'LRT') # MM is significant
+
+# Overall test for categorical variable: LOC
+logit.model.noLOC <- glm(factor(INS) ~ IRABAL + LOCBAL + LORES + factor(IRA) + factor(MM), 
+data=data_copy, family = binomial(link = 'logit'))
+
+anova(logit.model, logit.model.noLOC, test = 'LRT') # LOC is not significant
+
+# Overall test for categorical variable: IRA
+logit.model.noIRA <- glm(factor(INS) ~ IRABAL + LOCBAL + LORES + factor(LOC) + factor(MM), 
+                         data=data_copy, family = binomial(link = 'logit'))
+
+anova(logit.model, logit.model.noIRA, test = 'LRT') # IRA is significant
+
+
