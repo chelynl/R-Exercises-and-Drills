@@ -62,7 +62,7 @@ mean(df_results$mean) #0.5014333
 quantile(df_results$mean, c(.05, .95)) 
 
 #10 Use the hist() function to create a histogram of "df_results$mean" and "pop_truth". 
-#What type of distribution does df_results$mean appear to be?
+#What type of distribution does df_results$mean appear to be? Normal
 hist(df_results$mean)
 hist(pop_truth)
 
